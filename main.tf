@@ -72,7 +72,7 @@ resource "tls_private_key" "rsabh" {
 #Save Private Key Locally "https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file"
 resource "local_file" "TF-Key" {
     content  = tls_private_key.rsabh.private_key_pem
-    filename = "tfkey"
+    filename = "${path.module}/tfkey"
 }
 
 resource "aws_security_group" "web-sg" {
