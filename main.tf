@@ -46,7 +46,7 @@ resource "aws_instance" "web" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.web-sg.id]
-}
+
 
 #Generate Key Pair for SSH "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair#public_key"
   resource "aws_key_pair" "TF-Key" {
