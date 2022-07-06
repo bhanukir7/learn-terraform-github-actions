@@ -12,7 +12,7 @@ terraform {
   required_version = ">= 1.1.0"
 
   cloud {
-    organization = "REPLACE_ME"
+    organization = "adityaammu"
 
     workspaces {
       name = "gh-actions-demo"
@@ -57,11 +57,35 @@ resource "aws_instance" "web" {
               EOF
 }
 
+#Generate Key Pair for SSH "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair#public_key"
+  resource "aws_key_pair" "TF-Key" {
+  key_name   = "TF-Key"
+  public_key = tls_private_key.rsabh.public_key_openssh
+}
+
+# RSA key of size 4096 bits "https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key"
+resource "tls_private_key" "rsabh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+#Save Private Key Locally "https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file"
+resource "local_file" "TF-Key" {
+    content  = tls_private_key.rsabh.private_key_pem
+    filename = "tfkey"
+}
+
 resource "aws_security_group" "web-sg" {
   name = "${random_pet.sg.id}-sg"
   ingress {
     from_port   = 8080
     to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+   ingress {
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
