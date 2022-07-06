@@ -57,19 +57,19 @@ resource "aws_instance" "web" {
               EOF
 }
 
-#Generate Key Pair for SSH "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair#public_key"
+//Generate Key Pair for SSH "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair#public_key"
   resource "aws_key_pair" "TF-Key" {
   key_name   = "TF-Key"
   public_key = tls_private_key.rsabh.public_key_openssh
 }
 
-# RSA key of size 4096 bits "https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key"
+//RSA key of size 4096 bits "https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key"
 resource "tls_private_key" "rsabh" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
-#Save Private Key Locally "https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file"
+//Save Private Key Locally "https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file"
 resource "local_file" "TF-Key" {
     content  = tls_private_key.rsabh.private_key_pem
     filename = "${path.module}/tfkey"
